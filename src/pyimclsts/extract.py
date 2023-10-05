@@ -21,15 +21,15 @@ class Unknown(_base.base_message):
     \'\'\'A (received) message whose format is not known. It has valid sync number and valid CRC but could not be parsed.
 
     Contains a byte string field named 'contents' and a boolean value that indicates if its big or little endian.
-    On serialization, it forces the original endianess, regardless of what the user chose to use.
+    On serialization, it forces the original endianness, regardless of what the user chose to use.
     \'\'\'
 
-    __slots__ = ['_Attributes', '_header', '_footer', '_contents', '_endianess']
-    Attributes = _base.MessageAttributes(fields = ('contents','endianess', ), name = "Unknown", id = id, abbrev = "Unknown", description = "A (received) message whose format is not known. It has valid sync number and valid CRC but could not be parsed.", ##ATTRIBUTES##)
+    __slots__ = ['_Attributes', '_header', '_footer', '_contents', '_endianness']
+    Attributes = _base.MessageAttributes(fields = ('contents','endianness', ), name = "Unknown", id = id, abbrev = "Unknown", description = "A (received) message whose format is not known. It has valid sync number and valid CRC but could not be parsed.", ##ATTRIBUTES##)
     contents = _base.mutable_attr({'name': 'Contents', 'type': 'rawdata'}, "contents")
-    endianess = _base.mutable_attr({'name': 'endianess', 'type': 'rawdata'}, "endianess")
+    endianness = _base.mutable_attr({'name': 'endianness', 'type': 'rawdata'}, "endianness")
 
-    def __init__(self, id, contents = None, endianess = None):
+    def __init__(self, id, contents = None, endianness = None):
         \'\'\'Class constructor
         
         A (received) message whose format is not known. It has valid sync number and valid CRC but could not be parsed.
@@ -38,7 +38,7 @@ class Unknown(_base.base_message):
         contents : rawdata, unit: NOT FOUND
         \'\'\'
         self._contents = contents
-        self._endianess = endianess
+        self._endianness = endianness
     
     def _pack_fields(self, *, serial_functions : dict) -> bytes:
         raise NotImplemented
@@ -47,7 +47,7 @@ class Unknown(_base.base_message):
                         dst : int = None, dst_ent : int = None) -> bytes:
         \'\'\'Serialize function that optionally overwrites the header, if parameters are provided.\'\'\'
         
-        serial_functions = _core.pack_functions_big if self._endianess else _core.pack_functions_little
+        serial_functions = _core.pack_functions_big if self._endianness else _core.pack_functions_little
         
         s_fields = self._contents
         
@@ -243,6 +243,8 @@ if __name__ == '__main__':
             message_list = {i.strip() for i in f.readlines()}
     elif args.minimal:
         message_list = set()
+    else:
+        message_list = set() # should never happen
     
     file = 'IMC.xml'
     try:

@@ -2,9 +2,11 @@
     Contains functions to help develop/build the IMC binding, but are not used
     after the binding is complete.
 '''
+
+from typing import Any
 import xml.etree.ElementTree as ET
 
-def recursive_parser(element):
+def recursive_parser(element) -> dict:
     #print(element.attrib.get('id', None))
     node = {}
     if element.tag == 'description':
@@ -66,7 +68,7 @@ def recursive_parser(element):
 
     return node
 
-def recursive_print(node : dict, ws : str = '' ):
+def recursive_print(node : dict, ws : str = '' ) -> None:
     ws_ = "  " + ws
     for key in node.keys():
         if isinstance(node[key], dict):
@@ -75,7 +77,7 @@ def recursive_print(node : dict, ws : str = '' ):
         else:
             print(ws_ + key + ' : ' + str(node[key]))
 
-def tree_shortener(tree : dict, name : any) -> dict:
+def tree_shortener(tree : dict, name : Any) -> dict:
     '''Removes tree levels that consists of a single node.'''
     new_tree = dict()
 

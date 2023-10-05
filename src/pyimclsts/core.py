@@ -1,6 +1,6 @@
 '''
-    Contains mid layer functions that will be used by the IMC binding and are not directly
-    related to the parsing/extract process from the XML file. (lower layers).
+    Contains functions that will be internally used by the IMC binding and are not
+    related to the parsing/extract process from the XML file.
 
     All functions should be "universal" across different versions of IMC.
 
@@ -19,7 +19,8 @@ import ipaddress as _ipaddress
 import struct as _struct
 import asyncio as _asyncio
 
-# This has to be hardcoded =/
+from typing import Any
+
 # be = Big Endian, le = Little Endian
 
 pack_functions_big = {
@@ -125,7 +126,6 @@ crc16_ibm_table_uint = [
       0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040]
 
 def CRC16IMB(message : bytes) -> int:
-    '''Return value should be an uint, even though it is annoted with int (there is no uint in Python)'''
     result = 0
     for m in message:
             result = (result >> 8) ^ crc16_ibm_table_uint[((result ^ m) & 0xFF)]
@@ -143,7 +143,7 @@ def get_initial_IP() -> int:
             return int(_ipaddress.IPv4Address(ip))
     return int(_ipaddress.IPv4Address('127.0.0.1'))
 
-async def _async_wrapper(func, *args):
+async def _async_wrapper(func, *args) -> Any:
     return func(*args)
 
 class IMC_message():
@@ -179,7 +179,7 @@ class base_IO_interface:
     '''
     __slots__ = ['_input', '_output', '_o', '_i']
 
-    def __init__(self, input : any = None, output : any = None) -> None:
+    def __init__(self, input : Any = None, output : Any = None) -> None:
         self._input = input
         self._output = output
 
@@ -197,12 +197,12 @@ class base_IO_interface:
 
 class file_interface(base_IO_interface):
     '''
-        A minimal implemenation of a file interface. Receives an input
+        A minimal implementation of a file interface. Receives an input
         file name and (optionally) an output file name, to which it appends.
     '''
     __slots__ = ['_input', '_output', '_o', '_i']
 
-    def __init__(self, input : any = None, output : any = None) -> None:
+    def __init__(self, input : Any = None, output : Any = None) -> None:
         self._input = input
         self._output = output
 

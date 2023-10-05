@@ -1,9 +1,8 @@
 '''
-    Contains classes that define the role this pyimc instance will perform and
-    are intended to be used directly by the user or their abstraction layer
-
+    Contains classes that allows the user to connect to the network, 
+    send and receive messages.
 '''
-import typing as _typing
+from typing import Callable, Union, Optional, Tuple, Any
 import functools as _functools
 import inspect as _inspect
 import types as _types
@@ -27,7 +26,7 @@ _pg = _import.module_from_spec(_spec)
 _sys.modules[_module_name] = _pg
 _spec.loader.exec_module(_pg)
 
-def unpack(message : bytes, *, is_big_endian : bool = None, is_field_message : bool = False, fast_mode : bool = False) -> _core.IMC_message:
+def unpack(message : bytes, *, is_big_endian : Optional[bool] = None, is_field_message : bool = False, fast_mode : bool = False) -> Any:
     '''Expects a serializable (= exactly long (header + fields + CRC)) string of bits whose CRC has already been checked
     
     Fast mode skips all type checking performed by the descriptor by directly invoking the constructor.
@@ -47,7 +46,7 @@ def unpack(message : bytes, *, is_big_endian : bool = None, is_field_message : b
     
         msgid = deserialized_header.mgid
         if msgid not in _pg.messages._message_ids:
-            unknown_msg = _pg.messages.Unknown(msgid, contents = message[cursor:-2], endianess = is_big_endian)
+            unknown_msg = _pg.messages.Unknown(msgid, contents = message[cursor:-2], endianness = is_big_endian)
             unknown_msg._header = deserialized_header
             return unknown_msg
     else:
@@ -120,7 +119,7 @@ def unpack(message : bytes, *, is_big_endian : bool = None, is_field_message : b
     else:
         return (message_class, cursor)
 
-def _get_id_src_src_ent(message : bytes) -> int:
+def _get_id_src_src_ent(message : bytes) -> Tuple[int, int, int]:
     src_ent = message[16]
     if int.from_bytes(message[:2], byteorder='big') == _pg._base._sync_number:
         id = int.from_bytes(message[2:4], byteorder='big')
@@ -155,21 +154,21 @@ class _message_bus():
     def __exit__(self, exc_type, exc_value, exc_tb):
         raise NotImplemented
     
-    def block_outgoing(self):
+    def block_outgoing(self) -> None:
         '''Blocks (and discards) outgoing messages'''
         self._block_outgoing = True
-    def unblock_outgoing(self):
+    def unblock_outgoing(self) -> None:
         '''Unblock outgoing messages'''
         self._block_outgoing = False
 
-    def send(self, message : _pg._base.base_message, *, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> None:
+    def send(self, message : _pg._base.base_message, *, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> None:
         '''Wrapper around a queue (actually a pipe end).'''
         if not self._block_outgoing:
             self._send(message, src = src, src_ent = src_ent, dst = dst, dst_ent = dst_ent)
             
-    def _send(self, message : _pg._base.base_message, *, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> None:
+    def _send(self, message : _pg._base.base_message, *, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> None:
         raise NotImplemented
 
 class message_bus(_message_bus):
@@ -184,10 +183,10 @@ class message_bus(_message_bus):
 
     __slots__ = ['_child_end', '_parent_end', '_child_process', '_keep_running', '_big_endian']
 
-    def _external_listener_loop(self, child_end, timeout : int, keep_running : _multiprocessing.Value):
+    def _external_listener_loop(self, child_end, timeout : int, keep_running : _multiprocessing.Value) -> None:
         '''All code bellow is executed in a separate process.'''
 
-        async def consume_output(io_interface : _core.base_IO_interface):
+        async def consume_output(io_interface : _core.base_IO_interface) -> None:
             '''Continuously read the pipe end to send messages'''
             
             while keep_running.value:
@@ -309,8 +308,8 @@ class message_bus(_message_bus):
         self._child_process.join()
         self._child_process.close()
 
-    def _send(self, message : _pg._base.base_message, *, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> None:
+    def _send(self, message : _pg._base.base_message, *, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> None:
         self._parent_end.send_bytes(message.pack(is_big_endian=self._big_endian, src = src, src_ent = src_ent, 
                         dst = dst, dst_ent = dst_ent))
 
@@ -451,8 +450,8 @@ class message_bus_st(_message_bus):
         self._task.cancel()
         print('Message Bus has been closed.')
 
-    def _send(self, message : _pg._base.base_message, *, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> None:
+    def _send(self, message : _pg._base.base_message, *, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> None:
         self._writer_queue.put_nowait(message.pack(is_big_endian=self._big_endian, src = src, src_ent = src_ent, 
                         dst = dst, dst_ent = dst_ent))
 
@@ -511,7 +510,7 @@ class subscriber:
         self.subscribe_async(self._update_peers, _pg.messages.EntityList)
         self.subscribe_async(self._update_peers, _pg.messages.Announce)
 
-    async def _periodic_wrapper_coro(self, _period : float, f : _typing.Callable, send_callback : _typing.Callable[[_core.IMC_message], None]):
+    async def _periodic_wrapper_coro(self, _period : float, f : Callable, send_callback : Callable[[_core.IMC_message], None]):
         loop = _asyncio.get_running_loop()
         while True:
             last_exec = loop.time()
@@ -519,7 +518,7 @@ class subscriber:
             now = loop.time()
             await _asyncio.sleep(max(last_exec - now + _period, 0))
                 
-    async def _periodic_wrapper(self, _period : float, f : _typing.Callable, send_callback : _typing.Callable[[_core.IMC_message], None]):
+    async def _periodic_wrapper(self, _period : float, f : Callable, send_callback : Callable[[_core.IMC_message], None]):
         loop = _asyncio.get_running_loop()
         f(send_callback)
         while True:
@@ -549,7 +548,7 @@ class subscriber:
                 elif callable(f):
                     tasks.append(loop.create_task(self._periodic_wrapper(period, f, msg_mgr.send)))
                 else:
-                    print(f'Warning: Given function {f} is neither _typing.Callable nor a coroutine.')
+                    print(f'Warning: Given function {f} is neither Callable nor a coroutine.')
 
             while self._keep_running:
                 msg = msg_mgr.recv() if self._use_mp else await msg_mgr.recv()
@@ -575,7 +574,7 @@ class subscriber:
                 loop = _asyncio.get_running_loop()
                 loop.close()
 
-    def _update_peers(self, msg : _typing.Union[_pg.messages.EntityList, _pg.messages.Announce, _pg.messages.EntityInfo], send_callback):
+    def _update_peers(self, msg : Union[_pg.messages.EntityList, _pg.messages.Announce, _pg.messages.EntityInfo], send_callback):
         if msg._header is not None:
             src = msg._header.src
             
@@ -658,7 +657,7 @@ class subscriber:
             
         return False
     
-    def subscribe_async(self, callback : _typing.Callable[[_core.IMC_message, _typing.Callable[[_core.IMC_message], None]], None], msg_id : _typing.Union[int, _core.IMC_message, str, _types.ModuleType] = None, *, src : str = None, src_ent : str = None):
+    def subscribe_async(self, callback : Callable[[_core.IMC_message, Callable[[_core.IMC_message], None]], None], msg_id : Optional[Union[int, _core.IMC_message, str, _types.ModuleType]] = None, *, src : Optional[str] = None, src_ent : Optional[str] = None):
         '''Appends the callback to the list of subscriptions to a message.
         msg_id can be provided as an int, the class of the message, its instance or a category (string (camel case) or module).
         src and src_ent should be provided as strings.
@@ -720,24 +719,24 @@ class subscriber:
                     else:
                         self._subscriptions[key] = [(c, src, src_ent)]
 
-    def periodic_async(self, callback : _typing.Callable[[_core.IMC_message], None], period = float):
+    def periodic_async(self, callback : Callable[[_core.IMC_message], None], period : float):
         '''Add callback to a list to be called every period seconds. Function must take
         a send callback as parameter. This callback can be used to send messages.'''
         self._periodic.append((callback, period))
 
-    def subscribe_mp(self, callback : _typing.Callable[[_core.IMC_message, _typing.Callable[[_core.IMC_message], None]], None], msg_id : _typing.Union[int, _core.IMC_message, str, _types.ModuleType] = None, *, src : str = None, src_ent : str = None):
+    def subscribe_mp(self, callback : Callable[[_core.IMC_message, Callable[[_core.IMC_message], None]], None], msg_id : Optional[Union[int, _core.IMC_message, str, _types.ModuleType]] = None, *, src : Optional[str] = None, src_ent : Optional[str] = None):
         '''Calls a function and pass the message and a callback to send messages to it.
         Runs the given callback in a different process and should be used only with heavy load
         functions.
         '''
         raise NotImplemented
 
-    def call_once(self, callback : _typing.Callable[[_typing.Callable[[_core.IMC_message], None]], None], delay : float = None):
+    def call_once(self, callback : Callable[[Callable[[_core.IMC_message], None]], None], delay : Optional[float] = None) -> None:
         '''Calls the given callbacks as soon as the main loop starts or according to their delay in seconds.
         Callback parameters must be exactly one callback (that can be used to send messages).'''
         self._call_once.append((callback, delay))
 
-    def print_information(self):
+    def print_information(self) -> None:
         '''Looks for (and asks for, when applicable) the first Announce and EntityList messages and print them.
         
         Executes no other subscription.
@@ -757,7 +756,7 @@ class subscriber:
         self.periodic_async(self._queryEntityList, period=10)
         
         msgs = dict()
-        def printmsg(msg, cb):
+        def printmsg(msg, cb) -> None:
             if isinstance(msg, _pg.messages.Announce):
                 msgs['Announce'] = msg
             if isinstance(msg, _pg.messages.EntityList) and msg.op == _pg.messages.EntityList.OP.REPORT:
@@ -779,11 +778,11 @@ class subscriber:
         self._periodic = _periodic_temp
         self._call_once = _call_once_temp
 
-    def stop(self):
+    def stop(self) -> None:
         '''Signals the subscriber to immediately stop.'''
         self._keep_running = False
     
-    def run(self):
+    def run(self) -> None:
         '''Starts the event loop of the subscriber. 
         
         That is: Open the IO_interface, wraps and runs the callbacks that have been subscribed to messages.

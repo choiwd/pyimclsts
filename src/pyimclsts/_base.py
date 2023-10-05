@@ -1,26 +1,28 @@
-import copy
-from enum import IntEnum, IntFlag
-from collections import namedtuple
-import time
-
-import pyimclsts.core as core
-from . import enumerations as imc_enums
-from . import bitfields as imc_bitf
-
 '''
-Implementation of mutable and immutable types
+Contains implementation of the message base class and mutable and immutable types.
+The last 2 are basically deprecated and might be removed. 
 
 Considered operations to be protected:
     - Assignment;
-        - Attributes should not be re-assigned to invalid types
+        - Attributes should not be re-assigned with invalid types
     - Access (getter);
-        - Reference leakage (when a reference to a mutable object is inadvertently exposed)
+        - A reference to a mutable object should not inadvertently be exposed
     - Initialization.
         - Attributes should not be initialized with invalid types
     - Dynamic creation of attributes
         - Attributes should not be created/added to the module classes (Even if this is not
         dangerous per se, this might induce programming errors)
 '''
+
+import copy
+from enum import IntEnum, IntFlag
+from collections import namedtuple
+import time
+from typing import Optional, Any
+
+import pyimclsts.core as core
+from . import enumerations as imc_enums
+from . import bitfields as imc_bitf
 
 # "Global" definitions
 header_data = namedtuple('header_data', ['sync', 'mgid', 'size', 'timestamp', 'src', 'src_ent', 'dst', 'dst_ent'])
@@ -145,7 +147,7 @@ class base_message(IMC_message):
         
         return b''.join(serialized_fields)
 
-    def _pack_header(self, *, serial_functions : dict, size : int, src : str = None, src_ent : str = None, dst : str = None, dst_ent : str = None) -> bytes:
+    def _pack_header(self, *, serial_functions : dict, size : int, src : Optional[int] = None, src_ent : Optional[int] = None, dst : Optional[int] = None, dst_ent : Optional[int] = None) -> bytes:
         '''Gathers necessary builds the header, stores it in the private variable '_header' and returns the bit string.
         
         The tricky part is: Are the header fields fixed or not, that is, they should be hardcoded or not?
@@ -176,8 +178,8 @@ class base_message(IMC_message):
 
         return serial_functions['header'](*self._header)
     
-    def pack(self, *, is_field_message : bool = False, is_big_endian : bool = True, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> bytes:
+    def pack(self, *, is_field_message : bool = False, is_big_endian : bool = True, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> bytes:
         '''Serialize function that optionally overwrites the header, if parameters are provided.'''
         
         serial_functions = core.pack_functions_big if is_big_endian else core.pack_functions_little
@@ -197,7 +199,7 @@ class base_message(IMC_message):
             return s_message
         return serial_functions['uint16_t'](self.Attributes.id) + s_fields
 
-    def get_timestamp(self) -> float:
+    def get_timestamp(self) -> Optional[float]:
         '''Get the timestamp. Returns None if the message has no header yet.'''
         if hasattr(self, '_header'):
             return self._header.timestamp
@@ -215,10 +217,10 @@ class immutable_attr():
     def __init__(self, doc : str) -> None:
         self.__doc__ = doc
 
-    def __set_name__(self, owner : any, name : str):
+    def __set_name__(self, owner : Any, name : str):
         self._name = '_' + name
 
-    def __get__(self, instance : any, owner : any):
+    def __get__(self, instance : Any, owner : Any):
         if instance is None: #some hacky thing to allow docstrings
             return self
 
@@ -227,7 +229,7 @@ class immutable_attr():
         else:
             return copy.deepcopy(getattr(instance, self._name))
 
-    def __set__(self, owner : any, value : any):
+    def __set__(self, owner : Any, value : Any):
         raise AttributeError('Attribute \'{}\' of {} cannot be modified'.format(self._name, type(owner)))
     
     def __delete__(self, __name: str) -> None:
@@ -255,11 +257,11 @@ class mutable_attr():
         self._field_def = field_def
         self.__doc__ = doc
 
-    def __set_name__(self, owner : any, name : str):
+    def __set_name__(self, owner : Any, name : str):
         self._priv_name = '_' + name
         self._owner = owner
 
-    def __get__(self, instance : any, owner : any):
+    def __get__(self, instance : Any, owner : Any):
         if instance is None: #some hacky thing to allow docstrings
             return self
 
@@ -269,7 +271,7 @@ class mutable_attr():
         else:
             return copy.deepcopy(getattr(instance, self._priv_name))
 
-    def __set__(self, obj : any, value : any) -> None:
+    def __set__(self, obj : Any, value : Any) -> None:
         '''Performs type and boundary checks and throws exceptions'''
         set_value = value
         attribute_type = imc_types.get(self._field_def.get('type', None), None)
@@ -283,15 +285,15 @@ class mutable_attr():
 
         if isinstance(set_value, attribute_type):
             '''Obs: Should type casting be implemented? eg.: float -> int
-            Type casting/coersion will not be implemented to avoid reinforcing bad
-            pratices and increase transparency.
+            Type casting/coercion will not be implemented to avoid reinforcing bad
+            practices and increase transparency.
             
             On a 2nd thought, we may allow SOME upcasting, in particular, int -> float'''
             
             # if it is a list, check its elements types.
             if isinstance(set_value, imc_types['message-list']):
                 
-                for t in set_value:
+                for t in set_value: # type: ignore
                     # Check data type
                     if not isinstance(t, imc_types['message']):
                         raise ValueError('Cannot assign {} to attribute \'{}\'. Expected: {} of {}'.format(
