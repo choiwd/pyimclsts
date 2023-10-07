@@ -1,0 +1,103 @@
+title: PyIMCLSTS Documentation
+#email: your-email@example.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Python bindings for the IMC message protocol of the LSTS toolchain.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+#twitter_username: 
+github_username:  choiwd
+
+# Build settings
+remote_theme: allejo/jekyll-docs-theme@v1.0.0
+plugins:
+- jekyll-remote-theme # add this line to the plugins list if you already have one
+
+theme: jekyll-docs-theme
+
+# name of the software
+name: PyIMCLSTS
+
+project:
+  version: 1.0.0
+  download_url: https://pypi.org/project/pyimclsts/
+  download_text: PyPi Package
+
+license:
+  software: MIT License
+  software_url: https://opensource.org/licenses/MIT
+
+  #docs: CC BY 3.0
+  #docs_url: https://creativecommons.org/licenses/by/3.0/
+
+links:
+  header:
+    - title: LSTS Homepage
+      icon: home
+      url: https://lsts.pt/
+    - title: IMC documentation
+      icon: book
+      url: https://www.lsts.pt/docs/imc/master/
+    - title: GitHub
+      icon: github
+      brand: true
+      url: https://github.com/choiwd/pyimclsts
+  homepage:
+    - title: View on GitHub
+      icon: github
+      brand: true
+      url: https://github.com/choiwd/pyimclsts
+  footer:
+    - title: GitHub
+      icon: github
+      brand: true
+      url: https://github.com/choiwd/pyimclsts
+    - title: Issues
+      icon: bug
+      url: https://github.com/choiwd/pyimclsts/issues
+
+ui:
+  mode: 'auto' # 'auto', 'dark', 'light'
+  brand:
+    dark: "#00ceff"
+    light: "#a20000"
+  border_color:
+    dark: "#5f5f5f"
+    light: "#dee2e6"
+  header:
+    trianglify: true
+    dark:
+      color1: "#062a48"
+      color2: "#304e67"
+    light:
+      color1: "#080331"
+      color2: "#673051"
+  masthead:
+    color:
+      dark: "#fff"
+      light: "#fff"
+    align:
+      homepage: 'center'
+      page: 'left'
+
+social:
+  github:
+    user: choiwd
+    repo: PyIMCLSTS
+  twitter:
+    enabled: false
+    via:
+    hash:
+    account:
+  facebook:
+    enabled: false
+    profileUrl:
+
+# Build settings
+markdown: kramdown
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - jekyll-docs-theme.gemspec
+  - LICENSE.md
+  - README.md
+  - screenshot.png
