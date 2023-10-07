@@ -29,7 +29,7 @@ class Unknown(_base.base_message):
     contents = _base.mutable_attr({'name': 'Contents', 'type': 'rawdata'}, "contents")
     endianness = _base.mutable_attr({'name': 'endianness', 'type': 'rawdata'}, "endianness")
 
-    def __init__(self, id, contents = None, endianness = None):
+    def __init__(self, id, contents : bytes, endianness : bool):
         \'\'\'Class constructor
         
         A (received) message whose format is not known. It has valid sync number and valid CRC but could not be parsed.
@@ -37,14 +37,14 @@ class Unknown(_base.base_message):
         This message class contains the following fields and their respective types:
         contents : rawdata, unit: NOT FOUND
         \'\'\'
-        self._contents = contents
-        self._endianness = endianness
+        self._contents : bytes = contents
+        self._endianness : bool = endianness
     
     def _pack_fields(self, *, serial_functions : dict) -> bytes:
         raise NotImplemented
 
-    def pack(self, *, is_field_message : bool = False, is_big_endian : bool = True, src : int = None, src_ent : int = None, 
-                        dst : int = None, dst_ent : int = None) -> bytes:
+    def pack(self, *, is_field_message : bool = False, is_big_endian : bool = True, src : Optional[int] = None, src_ent : Optional[int] = None, 
+                        dst : Optional[int] = None, dst_ent : Optional[int] = None) -> bytes:
         \'\'\'Serialize function that optionally overwrites the header, if parameters are provided.\'\'\'
         
         serial_functions = _core.pack_functions_big if self._endianness else _core.pack_functions_little
@@ -355,7 +355,7 @@ if __name__ == '__main__':
     with open(_target_folder + '/' + file_name, mode = 'w', encoding='utf-8') as f:
         f.write('\'\'\'\nIMC messages.\n\'\'\'\n\n')
         # write import statements
-        f.write('from . import _base\nimport enum as _enum\nimport pyimclsts.core as _core\nfrom . import categories as _categories\n')
+        f.write('from . import _base\nimport enum as _enum\nimport pyimclsts.core as _core\nfrom . import categories as _categories\nfrom typing import Optional, Any\n')
         f.write('\n_message_ids = {}\n'.format(str(dict((k, v['abbrev']) for k, v in message_encyclopedia.items()))))
         f.write('\n# Re-export:\nIMC_message = _core.IMC_message\n')
         f.write(unknown_message.replace('##ATTRIBUTES##', ', '.join([i + '= None' for i in message_attributes if i not in {'fields', 'name', 'id', 'abbrev', 'description'}])))

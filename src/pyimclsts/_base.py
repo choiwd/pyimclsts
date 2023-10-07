@@ -261,7 +261,7 @@ class mutable_attr():
         self._priv_name = '_' + name
         self._owner = owner
 
-    def __get__(self, instance : Any, owner : Any):
+    def __get__(self, instance : Any, owner : Any) -> Any:
         if instance is None: #some hacky thing to allow docstrings
             return self
 
