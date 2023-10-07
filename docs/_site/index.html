@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+<title>PyIMCLSTS</title>
+<meta name="description" content="Python bindings for the IMC message protocol of the LSTS toolchain.">
+
+<link rel="canonical" href="http://localhost:4000/">
+<link rel="alternate" type="application/rss+xml" title="PyIMCLSTS Documentation" href="/feed.xml">
+
+
+
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y="
+    crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+    crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="/assets/css/styles.css"
+/>
+
+
+
+    </head>
+
+    
+    <body
+        class="layout-full"
+        data-spy="scroll"
+        data-target="#page-toc"
+        data-offset="0"
+    >
+        <header class="navbar navbar-expand-md navbar-custom" id="top">
+    <div class="container">
+        <a class="navbar-brand" href="/">PyIMCLSTS</a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <nav class="navbar-collapse collapse" role="navigation" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item ">
+                            <a
+                                class="nav-link"
+                                href="/documentation/ForDevs.html"
+                            >
+                                For Developers
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item ">
+                            <a
+                                class="nav-link"
+                                href="/documentation/ForUsers.html"
+                            >
+                                For End-Users
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item ">
+                            <a
+                                class="nav-link"
+                                href="/documentation/IMCMsg.html"
+                            >
+                                IMC Message
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://lsts.pt/"
+                        >
+                            
+    <i
+        class="fas fa-home fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            LSTS Homepage
+                        </a>
+                    </li>
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://www.lsts.pt/docs/imc/master/"
+                        >
+                            
+    <i
+        class="fas fa-book fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            IMC documentation
+                        </a>
+                    </li>
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://github.com/choiwd/pyimclsts"
+                        >
+                            
+    <i
+        class="fab fa-github fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+        
+<div class="site-masthead mb-5 py-5 text-center">
+    <div class="container">
+        <h1 class="site-masthead__title mb-1">PyIMCLSTS</h1>
+
+
+    <p class="site-masthead__description mb-0">
+        Python bindings for the IMC message protocol of the LSTS toolchain.
+    </p>
+
+
+        
+    <div class="mt-4 mb-0">
+        
+            
+
+            <a
+    href="https://pypi.org/project/pyimclsts/"
+    class="site-masthead__button mx-2 mb-2"
+>
+    
+    <i
+        class="fas fa-download fa-fw mr-1"
+        aria-hidden="true"
+    ></i>
+
+
+    PyPi Package
+</a>
+
+        
+
+        
+            <a
+    href="https://github.com/choiwd/pyimclsts"
+    class="site-masthead__button mx-2 mb-2"
+>
+    
+    <i
+        class="fab fa-github fa-fw mr-1"
+        aria-hidden="true"
+    ></i>
+
+
+    View on GitHub
+</a>
+
+        
+    </div>
+
+    
+        <p class="site-masthead__version my-0">
+            Latest release v1.0.0
+        </p>
+    
+
+
+    </div>
+</div>
+
+
+        <div class="container">
+    <main class="layout-full__main scope-markdown">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h2 id="pyimclsts">
+        
+        
+          PyIMCLSTS <a href="#pyimclsts" class="." title="" >#</a>
+        
+        
+      </h2>
+
+<p>This tool reads the IMC schema from a XML file, locally creates files containing the messages and connects (imports) the main global machinery.</p>
+
+<p>See <code class="language-plaintext highlighter-rouge">/example</code> to check an example implementation of the Follow Reference maneuver.</p>
+
+<div class="row">
+<div class="col-lg-6">
+    
+      <h2 class="mt-lg-0" id="installation">
+        
+        
+          Installation <a href="#installation" class="." title="" >#</a>
+        
+        
+      </h2>
+
+    <p>The package is hosted in the PyPi repository and the source code is available on GitHub.</p>
+    
+      <h3 id="installing">
+        
+        
+          Installing <a href="#installing" class="." title="" >#</a>
+        
+        
+      </h3>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pip3 <span class="nb">install </span>pyimclsts
+</code></pre></div>    </div>
+
+    <p>Or, if you are cloning the repo, from the folder where pyproject.toml is located:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pip3 install .
+</code></pre></div>    </div>
+    
+      <h3 id="extractinggenerating-messages">
+        
+        
+          Extracting/Generating messages: <a href="#extractinggenerating-messages" class="." title="" >#</a>
+        
+        
+      </h3>
+
+    <p>Choose a folder and have a version of the IMC schema, that is, a file named IMC.xml. Otherwise, it will automatically fetch the latest IMC version from the LSTS git repository. Just run:</p>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-m</span> pyimclsts.extract
+</code></pre></div>    </div>
+
+    <p>This will locally extract the IMC.xml as Python classes. You will see a folder called <code class="language-plaintext highlighter-rouge">pyimc_generated</code> which contains base messages, bitfields and enumerations from the IMC.xml file. They can be locally loaded using, for example:</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pyimc_generated</span> <span class="k">as</span> <span class="n">pg</span>
+</code></pre></div>    </div>
+
+  </div>
+<div class="col-lg-6">
+    
+      <h2 class="mt-lg-0" id="features">
+        
+        
+          Features <a href="#features" class="." title="" >#</a>
+        
+        
+      </h2>
+    
+      <h3 id="pure-python">
+        
+        
+          Pure Python <a href="#pure-python" class="." title="" >#</a>
+        
+        
+      </h3>
+
+    <p>This package uses only Python code, which means it can run wherever Python runs.</p>
+    
+      <h3 id="multi-version">
+        
+        
+          Multi-version <a href="#multi-version" class="." title="" >#</a>
+        
+        
+      </h3>
+
+    <p>By creating messages locally and installing only the shared functions, it is possible to work with different versions of the IMC on the same Python environment.</p>
+    
+      <h3 id="type-annotations-and-docstrings">
+        
+        
+          Type annotations and docstrings <a href="#type-annotations-and-docstrings" class="." title="" >#</a>
+        
+        
+      </h3>
+
+    <p>To help code and understand the IMC schema, type hints and docstrings were added wherever possible.</p>
+
+  </div>
+</div>
+
+
+
+    </main>
+
+    
+</div>
+
+
+        <footer class="site-footer border-top mt-4 py-4 text-center" role="contentinfo">
+    
+
+    <div class="container">
+    
+        <div class="site-footer__social-links">
+            <ul class="list-inline mb-2">
+                
+                    <li class="list-inline-item">
+                        <iframe
+                            class="github-btn"
+                            src="https://ghbtns.com/github-btn.html?user=choiwd&amp;repo=PyIMCLSTS&amp;type=watch&amp;count=true"
+                            width="90"
+                            height="20"
+                            title="Star on GitHub"
+                        ></iframe>
+                    </li>
+                    <li class="list-inline-item">
+                        <iframe
+                            class="github-btn"
+                            src="https://ghbtns.com/github-btn.html?user=choiwd&amp;repo=PyIMCLSTS&amp;type=fork&amp;count=true"
+                            width="90"
+                            height="20"
+                            title="Fork on GitHub"
+                        ></iframe>
+                    </li>
+                
+                
+                
+                
+                
+            </ul>
+        </div>
+    
+
+    <div class="site-footer__body">
+        <div class="row align-items-center">
+            <div class="col-md-5">
+                
+                    <ul class="site-footer__links text-left list-inline mb-0">
+                        
+                            <li class="list-inline-item">
+                                <a
+                                    href="https://github.com/choiwd/pyimclsts"
+                                    class="site-footer__link"
+                                >
+                                    
+    <i
+        class="fab fa-github fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                                    <span>GitHub</span>
+                                </a>
+                            </li>
+                        
+                            <li class="list-inline-item">
+                                <a
+                                    href="https://github.com/choiwd/pyimclsts/issues"
+                                    class="site-footer__link"
+                                >
+                                    
+    <i
+        class="fas fa-bug fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                                    <span>Issues</span>
+                                </a>
+                            </li>
+                        
+                    </ul>
+                
+            </div>
+
+            <div class="col-md-7 text-left text-md-right">
+                
+                    <div class="site-footer__summary">
+                        
+                        
+
+                        <p class="mb-0">Licensed under
+
+                                <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
+
+                        <p class="mb-0">
+                            Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>, generated with
+                            <a href="https://github.com/allejo/jekyll-docs-theme">Jekyll Docs Theme</a>
+                        </p>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</footer>
+
+
+
+<!-- Bootstrap Related Dependencies -->
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.js"
+    integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+    integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha256-WqU1JavFxSAMcLP2WIOI+GB2zWmShMI82mTpLDcqFUg=" crossorigin="anonymous"
+></script>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+    <script>
+        let uiColors = [];
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                uiColors = [
+                    "#062a48",
+                    "#304e67",
+                ];
+            } else {
+                uiColors = [
+                    "#080331",
+                    "#673051",
+                ];
+            }
+    </script>
+
+
+<script src="/assets/js/docs.js"></script>
+
+
+
+
+
+
+    </body>
+</html>

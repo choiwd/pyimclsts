@@ -2,8 +2,8 @@ title: PyIMCLSTS Documentation
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Python bindings for the IMC message protocol of the LSTS toolchain.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: pyimclsts/ # the subpath of your site, e.g. /blog
+url: "https://choiwd.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: 
 github_username:  choiwd
 
@@ -12,7 +12,7 @@ remote_theme: allejo/jekyll-docs-theme@v1.0.0
 plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 
-theme: jekyll-docs-theme
+#theme: jekyll-docs-theme
 
 # name of the software
 name: PyIMCLSTS

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+<title>IMC Message</title>
+<meta name="description" content="Python bindings for the IMC message protocol of the LSTS toolchain.">
+
+<link rel="canonical" href="http://localhost:4000/documentation/IMCMsg.html">
+<link rel="alternate" type="application/rss+xml" title="PyIMCLSTS Documentation" href="/feed.xml">
+
+
+
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y="
+    crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+    crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="/assets/css/styles.css"
+/>
+
+
+
+    </head>
+
+    
+    <body
+        class="layout-page"
+        data-spy="scroll"
+        data-target="#page-toc"
+        data-offset="0"
+    >
+        <header class="navbar navbar-expand-md navbar-custom" id="top">
+    <div class="container">
+        <a class="navbar-brand" href="/">PyIMCLSTS</a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <nav class="navbar-collapse collapse" role="navigation" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item ">
+                            <a
+                                class="nav-link"
+                                href="/documentation/ForDevs.html"
+                            >
+                                For Developers
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item ">
+                            <a
+                                class="nav-link"
+                                href="/documentation/ForUsers.html"
+                            >
+                                For End-Users
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                        <li class="nav-item active">
+                            <a
+                                class="nav-link"
+                                href="/documentation/IMCMsg.html"
+                            >
+                                IMC Message
+                            </a>
+                        </li>
+                    
+                
+                    
+                    
+
+                    
+                    
+
+                    
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://lsts.pt/"
+                        >
+                            
+    <i
+        class="fas fa-home fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            LSTS Homepage
+                        </a>
+                    </li>
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://www.lsts.pt/docs/imc/master/"
+                        >
+                            
+    <i
+        class="fas fa-book fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            IMC documentation
+                        </a>
+                    </li>
+                
+                    <li class="nav-item ">
+                        <a
+                            class="nav-link"
+                            href="https://github.com/choiwd/pyimclsts"
+                        >
+                            
+    <i
+        class="fab fa-github fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+        
+<div class="site-masthead mb-5 py-5 text-left">
+    <div class="container">
+        <h1 class="site-masthead__title mb-1">IMC Message</h1>
+
+
+
+        
+
+    </div>
+</div>
+
+
+        <div class="container">
+    <div class="row">
+        <main class="col-md-9 layout-page__main">
+            <section class="mobile-toc border mb-3 p-3 d-md-none">
+                <div class="d-flex align-items-center">
+                    <h2 class="mb-0">Table of Contents</h2>
+
+                    <button
+                        class="js-only ml-2 toggle-toc"
+                        aria-controls="mobileTOC"
+                        aria-label="Toggle table of contents"
+                        aria-expanded="true"
+                    >
+                        <span aria-hidden="true" data-role="toggle">Hide</span>
+                    </button>
+                </div>
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ul id="mobileTOC" class="js-toc mb-0 mt-2">
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#parts-of-the-message">Parts of the Message</a>
+    <ul>
+      <li><a href="#header">Header:</a></li>
+      <li><a href="#fields">Fields:</a></li>
+      <li><a href="#footer-16-bit-unsigned-integer">Footer (16 bit unsigned integer):</a></li>
+    </ul>
+  </li>
+  <li><a href="#serialization-and-deserialization">Serialization and Deserialization</a></li>
+</ul>
+
+
+            </section>
+
+            <section class="scope-markdown">
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h1 id="overview">
+        
+        
+          Overview <a href="#overview" class="." title="" >#</a>
+        
+        
+      </h1>
+<p>The IMC establishes a common control message set understood by all LSTS nodes. It was developed at the LSTS and it is pervasive in the LSTS ecosystem, as it enables communication among interconnected systems of vehicles, sensors, DUNE tasks, and even other layers of the control architecture, such as the Neptus.</p>
+
+<p>IMC abstracts hardware and communication differences, providing a shared set of messages that can be serialized and then exchanged using various means. Unlike other protocols, IMC does not impose a specific software architecture, allowing for native support generation across different programming languages and computer architectures. The message specification is an XML file that can be found in the repository of the LSTS. It should contain all the necessary information to serialize and deserialize messages exchanged in the network.</p>
+    
+      <h1 id="parts-of-the-message">
+        
+        
+          Parts of the Message <a href="#parts-of-the-message" class="." title="" >#</a>
+        
+        
+      </h1>
+    
+      <h2 id="header">
+        
+        
+          Header: <a href="#header" class="." title="" >#</a>
+        
+        
+      </h2>
+
+<p>The message header is tuple of</p>
+<ul>
+  <li>Synchronization Number (16 bit unsigned integer): Used to mark the begin of a message in the byte stream;</li>
+  <li>Message Identification Number (16 bit unsigned integer): Determines which messages this byte stream contains;</li>
+  <li>Message size (16 bit unsigned integer): Number of bytes of the ``Fields’’ part of the message;</li>
+  <li>Timestamp (64 bit double precision floating point number in IEEE 754 format): The time when the message was sent. The number of seconds is represented in Universal Coordinated Time (UCT) in seconds since Jan 1, 1970;</li>
+  <li>Source Address (16 bit unsigned integer): The number that identify, within the IMC network, the system that created this message;</li>
+  <li>Source Entity (8 bit unsigned integer): The entity (in general, a Dune task) generating this message at the source address.</li>
+  <li>Destination Address (16 bit unsigned integer): The number that identify, within the IMC network, the target system of this message;</li>
+  <li>Destination Entity (8 bit unsigned integer): The number that identify, within the IMC network, the target entity of this message, within the target system;</li>
+</ul>
+    
+      <h2 id="fields">
+        
+        
+          Fields: <a href="#fields" class="." title="" >#</a>
+        
+        
+      </h2>
+
+<p>The payload of the message. A finite set of values that carry information according to the definition of the container message. In particular, it can be of any type specified in the IMC schema, including another message or a list thereof;</p>
+    
+      <h2 id="footer-16-bit-unsigned-integer">
+        
+        
+          Footer (16 bit unsigned integer): <a href="#footer-16-bit-unsigned-integer" class="." title="" >#</a>
+        
+        
+      </h2>
+
+<p>A checksum value, calculated using the CRC-16-IBM with polynomial 0x8005 ((x^16 + x^15 + x^2 + 1)), that validates and indicates the integrity of the message;</p>
+    
+      <h1 id="serialization-and-deserialization">
+        
+        
+          Serialization and Deserialization <a href="#serialization-and-deserialization" class="." title="" >#</a>
+        
+        
+      </h1>
+
+<p>To ensure accurate transportation, some field types may require special treatment on transmission and reception. The operation of preparing a field type for transmission is called serialization, the inverse action is called deserialization. No special process is required for native types, such as integers, floating points and unsigned integers. For “composite” types, we use:</p>
+
+<ul>
+  <li>
+    <p>rawdata
+<code class="language-plaintext highlighter-rouge">rawdata</code> is serialized by prepending a value of type uint16_t, representing the length of the sequence, to the stream of bytes. On deserialization the prepended value is used to retrieve the length of the byte sequence.</p>
+  </li>
+  <li>
+    <p>plaintext
+<code class="language-plaintext highlighter-rouge">plaintext</code> is serialized by prepending a value of type uint16_t, representing the length of the sequence, to the stream of ASCII characters. On deserialization the prepended value is used to retrieve the length of the ASCII character sequence.</p>
+  </li>
+  <li>
+    <p>message
+<code class="language-plaintext highlighter-rouge">message</code> is serialized by prepending a value of type uint16_t, representing the identification number of the message, to the serialized message payload. The special identification number 65535 must be used when no message is present. On deserialization the prepended value is used to retrieve the correct message identification number.</p>
+  </li>
+  <li>
+    <p>message-list
+<code class="language-plaintext highlighter-rouge">message-list</code> is serialized by prepending a value of type uint16_t, representing the number of messages in the list, to the serialized message payload. On deserialization the prepended value is used to retrieve the correct number of messages.</p>
+  </li>
+</ul>
+
+
+
+            </section>
+        </main>
+
+        <aside class="col-md-3 layout-page__sidebar d-none d-md-block hidden-print">
+            
+            <nav id="page-toc" class="page-sidebar">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ul class="list-unstyled pl-0">
+  <li><a href="#overview" class="nav-link px-3 py-1">Overview</a></li>
+  <li><a href="#parts-of-the-message" class="nav-link px-3 py-1">Parts of the Message</a>
+    <ul>
+      <li><a href="#header" class="nav-link px-3 py-1">Header:</a></li>
+      <li><a href="#fields" class="nav-link px-3 py-1">Fields:</a></li>
+      <li><a href="#footer-16-bit-unsigned-integer" class="nav-link px-3 py-1">Footer (16 bit unsigned integer):</a></li>
+    </ul>
+  </li>
+  <li><a href="#serialization-and-deserialization" class="nav-link px-3 py-1">Serialization and Deserialization</a></li>
+</ul>
+
+
+
+    <a class="px-3 text-muted" href="#top">
+        <small>Back to top</small>
+    </a>
+</nav>
+
+            
+        </aside>
+    </div>
+
+    
+</div>
+
+
+        <footer class="site-footer border-top mt-4 py-4 text-center" role="contentinfo">
+    
+
+    <div class="container">
+    
+        <div class="site-footer__social-links">
+            <ul class="list-inline mb-2">
+                
+                    <li class="list-inline-item">
+                        <iframe
+                            class="github-btn"
+                            src="https://ghbtns.com/github-btn.html?user=choiwd&amp;repo=PyIMCLSTS&amp;type=watch&amp;count=true"
+                            width="90"
+                            height="20"
+                            title="Star on GitHub"
+                        ></iframe>
+                    </li>
+                    <li class="list-inline-item">
+                        <iframe
+                            class="github-btn"
+                            src="https://ghbtns.com/github-btn.html?user=choiwd&amp;repo=PyIMCLSTS&amp;type=fork&amp;count=true"
+                            width="90"
+                            height="20"
+                            title="Fork on GitHub"
+                        ></iframe>
+                    </li>
+                
+                
+                
+                
+                
+            </ul>
+        </div>
+    
+
+    <div class="site-footer__body">
+        <div class="row align-items-center">
+            <div class="col-md-5">
+                
+                    <ul class="site-footer__links text-left list-inline mb-0">
+                        
+                            <li class="list-inline-item">
+                                <a
+                                    href="https://github.com/choiwd/pyimclsts"
+                                    class="site-footer__link"
+                                >
+                                    
+    <i
+        class="fab fa-github fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                                    <span>GitHub</span>
+                                </a>
+                            </li>
+                        
+                            <li class="list-inline-item">
+                                <a
+                                    href="https://github.com/choiwd/pyimclsts/issues"
+                                    class="site-footer__link"
+                                >
+                                    
+    <i
+        class="fas fa-bug fa-fw "
+        aria-hidden="true"
+    ></i>
+
+
+                                    <span>Issues</span>
+                                </a>
+                            </li>
+                        
+                    </ul>
+                
+            </div>
+
+            <div class="col-md-7 text-left text-md-right">
+                
+                    <div class="site-footer__summary">
+                        
+                        
+
+                        <p class="mb-0">Licensed under
+
+                                <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
+
+                        <p class="mb-0">
+                            Documentation template by <a href="http://getbootstrap.com">Bootstrap team</a>, generated with
+                            <a href="https://github.com/allejo/jekyll-docs-theme">Jekyll Docs Theme</a>
+                        </p>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</footer>
+
+
+
+<!-- Bootstrap Related Dependencies -->
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.js"
+    integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+    integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"
+></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha256-WqU1JavFxSAMcLP2WIOI+GB2zWmShMI82mTpLDcqFUg=" crossorigin="anonymous"
+></script>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.2/trianglify.min.js"></script>
+    <script>
+        let uiColors = [];
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                uiColors = [
+                    "#062a48",
+                    "#304e67",
+                ];
+            } else {
+                uiColors = [
+                    "#080331",
+                    "#673051",
+                ];
+            }
+    </script>
+
+
+<script src="/assets/js/docs.js"></script>
+
+
+
+
+
+
+    </body>
+</html>
