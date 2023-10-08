@@ -4,6 +4,8 @@ This tool reads the IMC schema from a XML file, locally creates files containing
 
 See `/example` to check an example implementation of the Follow Reference maneuver.
 
+Check the documentation page [here](https://choiwd.github.io/pyimclsts/).
+
 ### Quick start:
 - Fancying a virtual env? (Not needed. Just in case you want to isolate it from your python setup)
 ```shell
