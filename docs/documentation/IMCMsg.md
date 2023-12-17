@@ -10,6 +10,8 @@ IMC abstracts hardware and communication differences, providing a shared set of 
 
 # Parts of the Message
 
+In this section, we'll briefly take a look at how an IMC message is structured.
+
 ## Header:
 
 The message header is tuple of
@@ -45,3 +47,57 @@ To ensure accurate transportation, some field types may require special treatmen
 
 * message-list
 `message-list` is serialized by prepending a value of type uint16_t, representing the number of messages in the list, to the serialized message payload. On deserialization the prepended value is used to retrieve the correct number of messages.
+
+# The IMC Message Python class
+
+By using the extract module as an executable, you can generate Python classes that represent IMC messages and can be utilized with the functions provide in this package.
+
+```shell
+$ python3 -m pyimclsts.extract
+```
+
+All the classes inherit from `base_message` class, which provides the methods that serialize (`pack`), tests for equality (`__eq__`), and pretty prints. As utility, it also has a method that gets the timestamp (`get_timestamp`). There is also an `IMC_message` class, which is empty, and exists only for type checking and avoiding cyclic references.
+
+All message classes have an `Attributes` attribute (a named tuple) that contains the basic message definition, as provided by XML file. Additionally, they have the message fields as attributes, a `_header` and a `_footer`, which are private and not supposed to be used by the end user. In particular, regarding the header, only the `src`, `src_ent`, `dst` and `dst_ent` fields can be defined by the user. To do so, these values must be passed to the `.pack` method or the the `send_callback` that is given to the the subscribed function (see [The subscriber methods](ForUsers.html#the-subscriber-methods)). Normally, this is inferred by the interface in use. Lastly, should a message define an enumeration or a bitfield, they will be included in the message class as a nested class.
+
+In the following example, we can see most of these features. Also, note that if an enumeration or bitfield is locally of globally defined in the XML, it will be indicated in its docstring.
+
+```python
+class DevCalibrationControl(_base.base_message):
+    '''Operation to perform. Enumerated (Local).
+
+       This message class contains the following fields and their respective types:
+    op : uint8_t, unit: Enumerated (Local)'''
+
+    class OP(_enum.IntEnum):
+        '''Full name: Operation
+        Prefix: DCAL'''
+
+        START = 0
+        '''Name: Start'''
+
+        STOP = 1
+        '''Name: Stop'''
+
+        STEP_NEXT = 2
+        '''Name: Perform Next Calibration Step'''
+
+        STEP_PREVIOUS = 3
+        '''Name: Perform Previous Calibration Step'''
+
+
+    __slots__ = ['_Attributes', '_header', '_footer', '_op']
+    Attributes = _base.MessageAttributes(description = "This message controls the calibration procedure of a given device. The destination device is selected using the destination entity identification number.", source = "vehicle,ccu", abbrev = "DevCalibrationControl", name = "Device Calibration Control", flags = None, usedby = None, stable = None, fields = ('op',), category = "Core", id = 12)
+
+    op = _base.mutable_attr({'name': 'Operation', 'type': 'uint8_t', 'unit': 'Enumerated', 'prefix': 'DCAL'}, "Operation to perform. Enumerated (Local).")
+    '''Operation to perform. Enumerated (Local). Type: uint8_t'''
+
+    def __init__(self, op = None):
+        '''Class constructor
+
+        Operation to perform. Enumerated (Local).
+
+       This message class contains the following fields and their respective types:
+    op : uint8_t, unit: Enumerated (Local)'''
+        self._op = op
+```
